@@ -7,11 +7,11 @@ export const metadata = {
 
 function SignUpPage() {
   return (
-    <div>
+    <section>
       <div>Sign Up Page</div>
 
       <Link href={"/login"}>Login</Link>
-    </div>
+    </section>
   )
 }
 
