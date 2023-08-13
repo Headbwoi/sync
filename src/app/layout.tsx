@@ -1,8 +1,10 @@
 import { ThemeProvider } from "@/providers/Provider"
 import "./globals.css"
-import { Inter } from "next/font/google"
+import { Raleway } from "next/font/google"
+import AppHeader from "@/components/header/app-header"
+import { BoardContextProvider } from "@/context/board-context"
 
-const inter = Inter({ subsets: ["latin"] })
+const raleway = Raleway({ subsets: ["latin"] })
 
 export const metadata = {
   title: "Sync - Manage your tasks Efficiently",
@@ -16,9 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-background`}>
+      <body className={`${raleway.className} bg-background`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <div className="flex w-full">
+            <BoardContextProvider>
+              <AppHeader />
+              {children}
+            </BoardContextProvider>
+          </div>
         </ThemeProvider>
       </body>
     </html>

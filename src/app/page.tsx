@@ -1,7 +1,10 @@
-import { redirect } from "next/navigation"
-import Image from "next/image"
+import PageHeader from "@/components/layouts/page-header"
 
 export default function Home() {
-  redirect("/login")
-  return <main>Hello, welcome to sync</main>
+  return (
+    <div className="relative w-full">
+      <PageHeader />
+      <main></main>
+    </div>
+  )
 }
