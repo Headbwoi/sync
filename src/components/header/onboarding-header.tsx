@@ -1,8 +1,8 @@
-import { ModeToggle } from "../Toggles/mode-toggle"
+import { ModeToggle } from "../mode-toggle"
 
 function OnboardingHeader() {
   return (
-    <header>
+    <header className="fixed top-0 left-0 w-full bg-foreground">
       <ModeToggle />
     </header>
   )
