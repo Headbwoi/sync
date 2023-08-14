@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${raleway.className} bg-background`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex overflow-x-scroll">
+          <div className="flex min-w-full">
             <BoardContextProvider>
               <Sidebar />
               {children}

@@ -6,13 +6,16 @@ import {
   EyeOff,
   SunIcon,
   MoonStar,
+  PlusIcon,
 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Icons } from "../icons"
 import { useBoardContext } from "@/context/board-context"
 import { useTheme } from "next-themes"
 import { useWindowSize } from "@/hooks/useWindowSize"
 import { Switch } from "../ui/switch"
+import { Button } from "../ui/button"
+import { CreateNewBoard } from "../boards/create-new-board"
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState(true)
@@ -39,27 +42,29 @@ export default function Sidebar() {
         </div>
 
         <>
-          <ul className="flex-1 px-3">
-            <div className="space-y-3">
+          <div className="flex-1 px-3">
+            <ul className="space-y-3">
               {boards.map((board) => {
                 const isActive = board === selectedBoard
                 return (
-                  <>
-                    <SidebarItem
-                      active={isActive}
-                      alert={isActive}
-                      expanded={expanded}
-                      text={board}
-                      key={board}
-                    />
-                  </>
+                  <SidebarItem
+                    active={isActive}
+                    alert={isActive}
+                    expanded={expanded}
+                    text={board}
+                    key={board}
+                  />
                 )
               })}
+            </ul>
+
+            <div className="pt-10">
+              <CreateNewBoard expanded={expanded} />
             </div>
-          </ul>
+          </div>
         </>
 
-        <section className="px-5 space-y-5">
+        <section className="p-5 space-y-5">
           <div
             className={`flex items-center justify-center gap-6 p-5 rounded-sm bg-background ${
               !expanded && "overflow-hidden w-0 invisible"
@@ -77,7 +82,7 @@ export default function Sidebar() {
           </div>
 
           <div
-            className={`flex items-center gap-5 text-xs cursor-pointer text-secondary ${
+            className={`flex items-center justify-center gap-5 text-sm cursor-pointer text-background ${
               !expanded && "overflow-hidden w-0"
             }`}
             onClick={() => setExpanded(false)}
@@ -112,14 +117,13 @@ export function SidebarItem({
         transition-colors group
         ${
           active
-            ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-secondary font-semibold"
-            : "hover:bg-indigo-50 text-gray-600"
+            ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-black/80 font-semibold"
+            : "hover:bg-background hover:text-foreground text-muted"
         }
     `}
       onClick={() => setSelectedBoard(text)}
-      key={text}
     >
-      <KanbanIcon className="text-card" />
+      <KanbanIcon className="text-card group-hover:text-foreground" />
       <span
         className={`overflow-hidden transition-all capitalize ${
           expanded ? "w-52 ml-3" : "w-0"
