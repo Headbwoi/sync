@@ -1,8 +1,8 @@
 import { ThemeProvider } from "@/providers/Provider"
 import "./globals.css"
 import { Raleway } from "next/font/google"
-import AppHeader from "@/components/header/app-header"
 import { BoardContextProvider } from "@/context/board-context"
+import Sidebar from "@/components/layouts/side-bar"
 
 const raleway = Raleway({ subsets: ["latin"] })
 
@@ -20,9 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${raleway.className} bg-background`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex w-full">
+          <div className="flex overflow-x-scroll">
             <BoardContextProvider>
-              <AppHeader />
+              <Sidebar />
               {children}
             </BoardContextProvider>
           </div>
