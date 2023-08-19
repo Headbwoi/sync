@@ -1,15 +1,14 @@
-"use client"
-import PageHeader from "@/components/layouts/page-header"
-import { TaskContextProvider } from "@/context/task-context"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export default function Home() {
   return (
-    <div className="relative min-w-screen w-full">
-      <TaskContextProvider>
-        <PageHeader />
+    <div className="relative w-full">
+      <p>Welcome to Sync Kanban</p>
 
-        <main className=""></main>
-      </TaskContextProvider>
+      <Button asChild>
+        <Link href="/boards">Get Started</Link>
+      </Button>
     </div>
   )
 }

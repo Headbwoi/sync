@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -12,25 +14,49 @@ import { Input } from "@/components/ui/input"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
 import { PlusIcon } from "lucide-react"
 import { Textarea } from "../ui/textarea"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select"
+  CreateBoardSchema,
+  CreateBoardType,
+} from "@/lib/validations/form-validations"
 
-export function CreateNewBoard({ expanded }: { expanded: boolean }) {
+export function CreateNewBoard({
+  expanded,
+  setExpanded,
+}: {
+  expanded: boolean
+  setExpanded: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const matches = useMediaQuery("(min-width: 768px)")
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateBoardType>({
+    resolver: zodResolver(CreateBoardSchema),
+  })
+
+  const OnSubmit = (data: CreateBoardType) => {
+    console.log(data)
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"outline"}>
+        <Button
+          variant={"outline"}
+          aria-label="Create New Board"
+          onClick={() => {
+            !matches && setExpanded(false)
+          }}
+        >
           {!expanded ? (
             <PlusIcon />
           ) : matches ? (
             <>
-              <PlusIcon /> Create New Board
+              <PlusIcon /> Create A New Board
             </>
           ) : (
             <PlusIcon />
@@ -39,22 +65,27 @@ export function CreateNewBoard({ expanded }: { expanded: boolean }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Boards</DialogTitle>
+          <DialogTitle>Create A New Board</DialogTitle>
           <DialogDescription>
             Add a new board to your board here
           </DialogDescription>
         </DialogHeader>
-        <form className="flex flex-col gap-4 py-4">
+        <form
+          className="flex flex-col gap-4 py-4"
+          onSubmit={handleSubmit(OnSubmit)}
+        >
           {/* title */}
           <div className="flex flex-col items-start gap-4">
-            <label htmlFor="title" className="text-sm text-right">
-              Title
+            <label htmlFor="board-name" className="text-sm text-right">
+              Board Name
             </label>
             <Input
-              id="title"
+              id="board-name"
               className="col-span-3"
-              placeholder="e.g. take coffee break"
+              placeholder="e.g. Start Workout"
+              {...register("boardName")}
             />
+            <p className="text-xs text-red-500">{errors.boardName?.message}</p>
           </div>
 
           {/* description */}
@@ -66,29 +97,13 @@ export function CreateNewBoard({ expanded }: { expanded: boolean }) {
               id="description"
               className="col-span-3"
               placeholder="e.g. it is always good to take a break and touch grass"
+              {...register("description")}
             />
           </div>
-
-          {/* status */}
-          <div className="flex flex-col items-start gap-5">
-            <label htmlFor="status" className="text-sm text-right">
-              Status
-            </label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Todo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todo">Todo</SelectItem>
-                <SelectItem value="doing">Doing</SelectItem>
-                <SelectItem value="done">Done</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <DialogFooter>
+            <Button type="submit">Save changes</Button>
+          </DialogFooter>
         </form>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

@@ -1,8 +1,25 @@
 "use client"
+import { boards } from "@/utils/seed-data"
 import React from "react"
 
 type BoardContextType = {
-  boards: string[]
+  boards: {
+    name: string
+    description: string
+    columns: {
+      name: string
+      tasks: {
+        name: string
+        description: string
+        subtasks: {
+          name: string
+          completed: boolean
+        }[]
+        id: string
+      }[]
+    }[]
+  }[]
+
   selectedBoard: string
   setSelectedBoard: React.Dispatch<React.SetStateAction<string>>
   openCreateNewBoard: boolean
@@ -18,9 +35,7 @@ export const BoardContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const boards = ["platform Launch", "marketing plan", "roadmap"]
-
-  const [selectedBoard, setSelectedBoard] = React.useState(boards[0])
+  const [selectedBoard, setSelectedBoard] = React.useState(boards[0].name)
   const [openCreateNewBoard, setOpenCreateNewBoard] = React.useState(false)
 
   return (

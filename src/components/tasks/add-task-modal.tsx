@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { PlusIcon } from "lucide-react"
+import { PlusIcon, X } from "lucide-react"
 import { Textarea } from "../ui/textarea"
 import {
   Select,
@@ -19,34 +19,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-
-const TaskSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-  // status: z.enum(["todo", "done", "pending"])
-  status: z.string(),
-  //   sub_tasks: z.array(z.string()),
-})
-
-type TaskType = z.infer<typeof TaskSchema>
+import { AddTaskSchema, AddTaskType } from "@/lib/validations/form-validations"
+import { ScrollArea } from "../ui/scroll-area"
+import { useWindowSize } from "@/hooks/useWindowSize"
 
 export function AddTaskModal() {
   const matches = useMediaQuery("(min-width: 768px)")
+  const { height } = useWindowSize()
 
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<TaskType>({
-    resolver: zodResolver(TaskSchema),
+    control,
+  } = useForm<AddTaskType>({
+    resolver: zodResolver(AddTaskSchema),
   })
 
-  const onSubmit = (tasks: TaskType) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "sub_tasks", // unique name for your Field Array
+  })
+
+  const onSubmit = (tasks: AddTaskType) => {
     console.log(tasks)
   }
+
+  // console.log(errors)
 
   return (
     <Dialog>
@@ -61,62 +62,120 @@ export function AddTaskModal() {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add New Task</DialogTitle>
-          <DialogDescription>
-            Add a new task to your board here
-          </DialogDescription>
-        </DialogHeader>
-        <form
-          className="flex flex-col gap-4 py-4"
-          onSubmit={handleSubmit(onSubmit)}
+      <DialogContent className="px-2">
+        <ScrollArea
+          className="w-full"
+          style={{
+            height: `${height - 100}px`,
+          }}
         >
-          {/* title */}
-          <div className="flex flex-col items-start gap-4">
-            <label htmlFor="title" className="text-sm text-right">
-              Title
-            </label>
-            <Input
-              id="title"
-              className="col-span-3"
-              placeholder="e.g. take coffee break"
-              {...register("title")}
-            />
-          </div>
+          <DialogHeader className="px-4">
+            <DialogTitle>Add New Task</DialogTitle>
+            <DialogDescription>
+              Add a new task to your board here
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            className="flex flex-col gap-4 py-4 mx-4"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            {/* title */}
+            <div className="flex flex-col items-start gap-4">
+              <label htmlFor="title" className="text-sm text-right">
+                Title
+              </label>
+              <Input
+                id="title"
+                className="col-span-3"
+                placeholder="e.g. take coffee break"
+                {...register("title")}
+              />
+              <p className="text-xs text-red-500">{errors.title?.message}</p>
+            </div>
 
-          {/* description */}
-          <div className="flex flex-col items-start gap-5">
-            <label htmlFor="description" className="text-sm text-right">
-              Description
-            </label>
-            <Textarea
-              id="description"
-              className="col-span-3"
-              placeholder="e.g. it is always good to take a break and touch grass"
-              {...register("description")}
-            />
-          </div>
+            {/* description */}
+            <div className="flex flex-col items-start gap-5">
+              <label htmlFor="description" className="text-sm text-right">
+                Description
+              </label>
+              <Textarea
+                id="description"
+                className="col-span-3"
+                placeholder="e.g. it is always good to take a break and touch grass"
+                {...register("description")}
+              />
+              <p className="text-xs text-red-500">
+                {errors.description?.message}
+              </p>
+            </div>
 
-          {/* status */}
-          <div className="flex flex-col items-start gap-5">
-            <label htmlFor="status" className="text-sm text-right">
-              Status
-            </label>
-            <Select {...register("status")}>
-              <SelectTrigger>
-                <SelectValue placeholder="Todo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todo">Todo</SelectItem>
-                <SelectItem value="doing">Doing</SelectItem>
-                <SelectItem value="done">Done</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Button type="submit">Save changes</Button>
-        </form>
-        <DialogFooter></DialogFooter>
+            {/* column */}
+            <div className="flex flex-col items-start gap-5">
+              <label htmlFor="column" className="text-sm text-right">
+                Column
+              </label>
+
+              <Controller
+                control={control}
+                name="column"
+                render={({ field: { onChange, value } }) => (
+                  <Select onValueChange={onChange} defaultValue={value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Todo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="todo">Todo</SelectItem>
+                      <SelectItem value="doing">Doing</SelectItem>
+                      <SelectItem value="done">Done</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              <p className="text-xs text-red-500">{errors.column?.message}</p>
+            </div>
+
+            {/* sub tasks */}
+
+            <div className="flex flex-col items-start gap-5">
+              <label htmlFor="sub_tasks" className="text-sm text-right">
+                Sub Tasks
+              </label>
+
+              {fields.map((field, index) => (
+                <div className="flex items-center w-full gap-3" key={field.id}>
+                  <Input
+                    id={`sub_task${index}`}
+                    {...register(`sub_tasks.${index}.task`)}
+                    placeholder="e.g. do 10 situps"
+                  />
+                  <X
+                    onClick={() => {
+                      remove(index)
+                    }}
+                  />
+                </div>
+              ))}
+
+              <Button
+                variant={"secondary"}
+                className="flex items-center w-full gap-4"
+                onClick={() => {
+                  append({
+                    status: "pending",
+                    task: "",
+                  })
+                }}
+              >
+                <PlusIcon /> Add New Subtask
+              </Button>
+            </div>
+
+            <DialogFooter>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )

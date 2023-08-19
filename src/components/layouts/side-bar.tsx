@@ -6,7 +6,6 @@ import {
   EyeOff,
   SunIcon,
   MoonStar,
-  PlusIcon,
 } from "lucide-react"
 import { useState } from "react"
 import { Icons } from "../icons"
@@ -14,11 +13,11 @@ import { useBoardContext } from "@/context/board-context"
 import { useTheme } from "next-themes"
 import { useWindowSize } from "@/hooks/useWindowSize"
 import { Switch } from "../ui/switch"
-import { Button } from "../ui/button"
 import { CreateNewBoard } from "../boards/create-new-board"
+import { useRouter } from "next/navigation"
 
 export default function Sidebar() {
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
   const { boards, selectedBoard } = useBoardContext()
   const { theme, setTheme } = useTheme()
 
@@ -27,7 +26,7 @@ export default function Sidebar() {
   return (
     <aside
       style={{
-        height: `${height}px`,
+        minHeight: `${height}px`,
       }}
     >
       <nav className="flex flex-col h-full border-r shadow-sm bg-foreground">
@@ -46,21 +45,21 @@ export default function Sidebar() {
           <div className="flex-1 px-3">
             <ul className="space-y-3">
               {boards.map((board) => {
-                const isActive = board === selectedBoard
+                const isActive = board.name === selectedBoard
                 return (
                   <SidebarItem
                     active={isActive}
                     alert={isActive}
                     expanded={expanded}
-                    text={board}
-                    key={board}
+                    text={board.name}
+                    key={board.name}
                   />
                 )
               })}
             </ul>
 
             <div className="pt-10">
-              <CreateNewBoard expanded={expanded} />
+              <CreateNewBoard expanded={expanded} setExpanded={setExpanded} />
             </div>
           </div>
         </>
@@ -109,6 +108,7 @@ export function SidebarItem({
   alert: boolean
   expanded: boolean
 }) {
+  const router = useRouter()
   const { setSelectedBoard } = useBoardContext()
 
   return (
@@ -123,7 +123,10 @@ export function SidebarItem({
             : "hover:bg-background hover:text-foreground text-muted"
         }
     `}
-      onClick={() => setSelectedBoard(text)}
+      onClick={() => {
+        setSelectedBoard(text)
+        router.push(`/boards/${text.replaceAll(" ", "-")}`)
+      }}
     >
       <KanbanIcon className="text-card group-hover:text-foreground" />
       <span
