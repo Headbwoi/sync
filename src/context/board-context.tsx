@@ -13,6 +13,7 @@ type BoardType = {
         tasks: {
           id: string
           name: string
+          status: string
           description: string
           subtasks: {
             task: string
