@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation"
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState(false)
-  const { boards, selectedBoard } = useBoardContext()
+  const { boards, setCurrentBoard, currentBoard } = useBoardContext()
   const { theme, setTheme } = useTheme()
 
   const { height } = useWindowSize()
@@ -45,15 +45,20 @@ export default function Sidebar() {
           <div className="flex-1 px-3">
             <ul className="space-y-3">
               {boards.map((board) => {
-                const isActive = board.name === selectedBoard
+                const isActive = board.boardName === currentBoard.boardName
                 return (
-                  <SidebarItem
-                    active={isActive}
-                    alert={isActive}
-                    expanded={expanded}
-                    text={board.name}
-                    key={board.name}
-                  />
+                  <div
+                    key={board.boardName}
+                    onClick={() => setCurrentBoard(board)}
+                  >
+                    <SidebarItem
+                      active={isActive}
+                      alert={isActive}
+                      expanded={expanded}
+                      text={board.boardName}
+                      key={board.boardName}
+                    />
+                  </div>
                 )
               })}
             </ul>

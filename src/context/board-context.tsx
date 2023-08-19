@@ -1,29 +1,36 @@
 "use client"
-import { boards } from "@/utils/seed-data"
-import React from "react"
+import { useBoardStore } from "@/zustand/store"
+import React, { useEffect, useState } from "react"
+
+type BoardType = {
+  id: string
+  boardName: string
+  description: string
+  columns:
+    | []
+    | {
+        name: string
+        tasks: {
+          id: string
+          name: string
+          description: string
+          subtasks: {
+            name: string
+            completed: boolean
+          }[]
+        }[]
+      }[]
+}
 
 type BoardContextType = {
-  boards: {
-    name: string
-    description: string
-    columns: {
-      name: string
-      tasks: {
-        name: string
-        description: string
-        subtasks: {
-          name: string
-          completed: boolean
-        }[]
-        id: string
-      }[]
-    }[]
-  }[]
+  boards: BoardType[]
 
   selectedBoard: string
   setSelectedBoard: React.Dispatch<React.SetStateAction<string>>
   openCreateNewBoard: boolean
   setOpenCreateNewBoard: React.Dispatch<React.SetStateAction<boolean>>
+  currentBoard: BoardType
+  setCurrentBoard: React.Dispatch<React.SetStateAction<BoardType>>
 }
 
 export const BoardContext = React.createContext<BoardContextType>(
@@ -35,8 +42,16 @@ export const BoardContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const [selectedBoard, setSelectedBoard] = React.useState(boards[0].name)
+  const { boards } = useBoardStore((state) => state)
+  const [selectedBoard, setSelectedBoard] = React.useState(
+    boards[0]?.boardName ?? ""
+  )
+  const [currentBoard, setCurrentBoard] = useState({} as BoardType)
   const [openCreateNewBoard, setOpenCreateNewBoard] = React.useState(false)
+
+  useEffect(() => {
+    console.log(currentBoard)
+  }, [currentBoard])
 
   return (
     <BoardContext.Provider
@@ -46,6 +61,8 @@ export const BoardContextProvider = ({
         setSelectedBoard,
         openCreateNewBoard,
         setOpenCreateNewBoard,
+        currentBoard,
+        setCurrentBoard,
       }}
     >
       {children}

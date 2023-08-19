@@ -20,6 +20,8 @@ import {
   CreateBoardSchema,
   CreateBoardType,
 } from "@/lib/validations/form-validations"
+import { useBoardStore } from "@/zustand/store"
+import { DialogClose } from "@radix-ui/react-dialog"
 
 export function CreateNewBoard({
   expanded,
@@ -30,6 +32,8 @@ export function CreateNewBoard({
 }) {
   const matches = useMediaQuery("(min-width: 768px)")
 
+  const { createNewBoard } = useBoardStore((state) => state)
+
   const {
     register,
     handleSubmit,
@@ -39,7 +43,15 @@ export function CreateNewBoard({
   })
 
   const OnSubmit = (data: CreateBoardType) => {
-    console.log(data)
+    const payload = {
+      ...data,
+      columns: [],
+      id: crypto.randomUUID().toString().replaceAll("-", ""),
+    }
+
+    // console.log(payload)
+
+    createNewBoard(payload)
   }
 
   return (
@@ -101,7 +113,9 @@ export function CreateNewBoard({
             />
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <DialogClose asChild>
+              <Button type="submit">Save Board</Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

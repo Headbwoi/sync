@@ -14,21 +14,36 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ColumnType, columnSchema } from "@/lib/validations/form-validations"
 import { PlusIcon } from "lucide-react"
+import { useBoardContext } from "@/context/board-context"
+import { useBoardStore } from "@/zustand/store"
+import { DialogClose } from "@radix-ui/react-dialog"
 
 export function AddColumn() {
   const matches = useMediaQuery("(min-width: 768px)")
+  const { selectedBoard, currentBoard } = useBoardContext()
+  const { addColumnToBoard } = useBoardStore((state) => state)
 
   const {
     handleSubmit,
     register,
     formState: { errors },
-    control,
   } = useForm<ColumnType>({
     resolver: zodResolver(columnSchema),
   })
 
   const onSubmit = ({ column }: ColumnType) => {
-    console.log(column)
+    // console.log(column)
+    // console.log(selectedBoard)
+    // console.log(currentBoard)
+
+    addColumnToBoard({
+      id: currentBoard.id,
+      columns: currentBoard.columns as [],
+      newColumn: {
+        name: column,
+        tasks: [],
+      },
+    })
   }
 
   return (
@@ -70,7 +85,9 @@ export function AddColumn() {
           </div>
 
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <DialogClose asChild>
+              <Button type="submit">Save changes</Button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

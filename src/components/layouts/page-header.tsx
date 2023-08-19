@@ -1,13 +1,29 @@
 "use client"
 import { useBoardContext } from "@/context/board-context"
-import { useMediaQuery } from "@/hooks/useMediaQuery"
-import { useTaskContext } from "@/context/task-context"
 import { AddTaskModal } from "../tasks/add-task-modal"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 function PageHeader({ selectedBoard }: { selectedBoard: string }) {
-  // const { selectedBoard } = useBoardContext()
-  const matches = useMediaQuery("(min-width: 768px)")
-  const { setOpenTaskModal } = useTaskContext()
+  const router = useRouter()
+  // const matches = useMediaQuery("(min-width: 768px)")
+  // const { setOpenTaskModal } = useTaskContext()
+
+  const { boards, setCurrentBoard, currentBoard } = useBoardContext()
+  useEffect(() => {
+    const currentBoard = boards.find(
+      (board) => board.boardName === selectedBoard
+    )
+
+    if (!currentBoard) {
+      router.push("/boards")
+      return
+    }
+    setCurrentBoard(currentBoard)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boards, selectedBoard])
+
+  // console.log(currentBoard)
 
   return (
     <header

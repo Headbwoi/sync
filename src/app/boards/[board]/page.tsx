@@ -9,7 +9,7 @@ function Board({ params }: { params: { board: string } }) {
     <div className="relative w-full overflow-hidden">
       <PageHeader selectedBoard={formattedBoard} />
 
-      <BoardColumn board={formattedBoard} />
+      <BoardColumn />
     </div>
   )
 }
