@@ -63,6 +63,7 @@ export function AddTaskModal() {
       description: tasks.description,
       title: tasks.title,
       subtasks: tasks.sub_tasks,
+      status: tasks.column,
     }
 
     // console.log(payload)

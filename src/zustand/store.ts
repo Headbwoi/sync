@@ -11,6 +11,7 @@ interface StoreState {
           name: string
           tasks: {
             id: string
+            status: string
             name: string
             description: string
             subtasks: {
@@ -46,6 +47,7 @@ interface StoreState {
     }
     description: string
     title: string
+    status: string
     subtasks:
       | {
           completed: boolean
@@ -92,6 +94,7 @@ export const useBoardStore = create<StoreState>()(
                 description: data.description,
                 name: data.title,
                 subtasks: data.subtasks ? data.subtasks : [],
+                status: data.status,
               })
               return { ...board, columns: updatedColumns }
             }

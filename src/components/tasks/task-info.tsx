@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import Modal from "../ui/modal"
 import { Checkbox } from "../ui/checkbox"
 import {
@@ -18,6 +18,7 @@ export type TaskProps = {
     completed: boolean
   }[]
   id: string
+  status: string
 }
 
 function TaskInfo({
@@ -30,7 +31,7 @@ function TaskInfo({
   setShowModal: (open: boolean) => void
 }) {
   const { currentBoard } = useBoardContext()
-  const [status, setStatus] = useState(currentBoard.boardName)
+  const [status, setStatus] = useState(task.status)
 
   const completedSubTasks = task.subtasks.reduce((count, task) => {
     if (task.completed) {
@@ -39,9 +40,9 @@ function TaskInfo({
     return count
   }, 0)
 
-  useEffect(() => {
-    console.log(status)
-  }, [status])
+  // useEffect(() => {
+  //   console.log(status)
+  // }, [status])
 
   return (
     <Modal open={showModal} onOpenChange={setShowModal}>
@@ -82,11 +83,11 @@ function TaskInfo({
 
           <Select
             onValueChange={(value) => setStatus(value)}
-            defaultValue={status}
+            defaultValue={task.status}
           >
             <SelectTrigger>
               <SelectValue
-                placeholder={currentBoard?.columns[0].name}
+                placeholder={task.status}
                 className="text-red-500 placeholder:text-red-500"
               />
             </SelectTrigger>

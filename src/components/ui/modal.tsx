@@ -26,14 +26,14 @@ function ModalContent({
 }: {
   title: string
   children: ReactNode
-  className?: string
+  className: string
 }) {
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 bg-black/50 data-[state=closed]:animate-[dialog-overlay-hide_200ms] data-[state=open]:animate-[dialog-overlay-show_200ms]" />
       <Dialog.Content
         className={cn(
-          "fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-md p-8 shadow data-[state=closed]:animate-[dialog-content-hide_500ms] data-[state=open]:animate-[dialog-content-show_500ms]",
+          "fixed left-1/2 top-1/2 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-md bg-accent-foreground p-8 shadow data-[state=closed]:animate-[dialog-content-hide_500ms] data-[state=open]:animate-[dialog-content-show_500ms]",
           className
         )}
       >
