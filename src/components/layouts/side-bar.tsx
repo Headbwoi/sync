@@ -36,6 +36,7 @@ export default function Sidebar() {
           <button
             onClick={() => setExpanded((curr) => !curr)}
             className="p-1.5 rounded-lg bg-secondary"
+            aria-label={expanded ? "Close Side bar" : "Open Side bar"}
           >
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
@@ -77,6 +78,7 @@ export default function Sidebar() {
               onClick={() => {
                 theme === "dark" ? setTheme("light") : setTheme("dark")
               }}
+              aria-label="toggle theme"
             />
             <MoonStar className="text-foreground" />
           </div>

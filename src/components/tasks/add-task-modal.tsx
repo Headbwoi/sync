@@ -51,7 +51,7 @@ export function AddTaskModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"outline"}>
+        <Button variant={"outline"} aria-label="Add New Task">
           {matches ? (
             <>
               <PlusIcon /> Add New Task

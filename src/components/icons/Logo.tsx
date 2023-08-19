@@ -7,11 +7,7 @@ function Logo() {
   const { theme } = useTheme()
 
   return (
-    <Link
-      href={"/"}
-      aria-label="Tech Shop home page"
-      className="flex items-center gap-2"
-    >
+    <Link href={"/"} aria-label="Kanban" className="flex items-center gap-2">
       {theme === "dark" || theme === "system" ? (
         <svg
           className="w-6 h-6 md:w-8 md:h-8"
