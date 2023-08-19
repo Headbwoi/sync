@@ -9,13 +9,12 @@ import {
   SelectValue,
 } from "../ui/select"
 import { useBoardContext } from "@/context/board-context"
-import { boards } from "@/utils/seed-data"
 
 export type TaskProps = {
   name: string
   description: string
   subtasks: {
-    name: string
+    task: string
     completed: boolean
   }[]
   id: string
@@ -30,10 +29,8 @@ function TaskInfo({
   showModal: boolean
   setShowModal: (open: boolean) => void
 }) {
-  const { selectedBoard } = useBoardContext()
-  const [status, setStatus] = useState(selectedBoard)
-
-  console.log(selectedBoard)
+  const { currentBoard } = useBoardContext()
+  const [status, setStatus] = useState(currentBoard.boardName)
 
   const completedSubTasks = task.subtasks.reduce((count, task) => {
     if (task.completed) {
@@ -41,8 +38,6 @@ function TaskInfo({
     }
     return count
   }, 0)
-
-  const [currentBoard] = boards.filter((board) => board.name === selectedBoard)
 
   useEffect(() => {
     console.log(status)
@@ -61,15 +56,15 @@ function TaskInfo({
 
           <div className="flex flex-col gap-3">
             {task.subtasks.map((task, index) => (
-              <div className="flex items-center space-x-2" key={task.name}>
+              <div className="flex items-center space-x-2" key={task.task}>
                 <div className="flex items-center rounded-sm ring-blue-500 ring-2">
-                  <Checkbox id={`${index}`} checked={task.completed} />
+                  <Checkbox id={`${index}`} />
                 </div>
                 <label
                   htmlFor={`${index}`}
                   className="text-sm font-medium leading-none text-muted peer-disabled:cursor-not-allowed peer-disabled:opacity-70 checked:line-through"
                 >
-                  {task.name}
+                  {task.task}
                 </label>
               </div>
             ))}
@@ -91,12 +86,12 @@ function TaskInfo({
           >
             <SelectTrigger>
               <SelectValue
-                placeholder={currentBoard.columns[0].name}
+                placeholder={currentBoard?.columns[0].name}
                 className="text-red-500 placeholder:text-red-500"
               />
             </SelectTrigger>
             <SelectContent className="">
-              {currentBoard.columns.map((column) => (
+              {currentBoard?.columns.map((column) => (
                 <SelectItem
                   key={column.name}
                   value={column.name}

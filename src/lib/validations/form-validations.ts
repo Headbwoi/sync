@@ -21,7 +21,7 @@ const AddTaskSchema = z.object({
     .array(
       z.object({
         task: z.string(),
-        status: z.enum(["pending", "cpmpleted"]).default("pending"),
+        completed: z.boolean(),
       })
     )
     .optional(),

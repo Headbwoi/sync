@@ -24,10 +24,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { AddTaskSchema, AddTaskType } from "@/lib/validations/form-validations"
 import { ScrollArea } from "../ui/scroll-area"
 import { useWindowSize } from "@/hooks/useWindowSize"
+import { useBoardStore } from "@/zustand/store"
+import { useBoardContext } from "@/context/board-context"
+import { DialogClose } from "@radix-ui/react-dialog"
+import { useState } from "react"
 
 export function AddTaskModal() {
   const matches = useMediaQuery("(min-width: 768px)")
   const { height } = useWindowSize()
+  const { addTaskToColumn } = useBoardStore((state) => state)
+  const { currentBoard } = useBoardContext()
+  const [columnIndex, setColumnIndex] = useState(0)
 
   const {
     handleSubmit,
@@ -44,7 +51,22 @@ export function AddTaskModal() {
   })
 
   const onSubmit = (tasks: AddTaskType) => {
-    console.log(tasks)
+    // console.log(tasks)
+
+    const payload = {
+      id: crypto.randomUUID().toString().replaceAll("-", ""),
+      boardId: currentBoard.id,
+      columnInfo: {
+        name: tasks.column,
+        index: columnIndex,
+      },
+      description: tasks.description,
+      title: tasks.title,
+      subtasks: tasks.sub_tasks,
+    }
+
+    // console.log(payload)
+    addTaskToColumn(payload)
   }
 
   // console.log(errors)
@@ -121,12 +143,21 @@ export function AddTaskModal() {
                 render={({ field: { onChange, value } }) => (
                   <Select onValueChange={onChange} defaultValue={value}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Todo" />
+                      <SelectValue placeholder="Enter Column" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="todo">Todo</SelectItem>
-                      <SelectItem value="doing">Doing</SelectItem>
-                      <SelectItem value="done">Done</SelectItem>
+                      {currentBoard.columns.map((column, index) => (
+                        <SelectItem
+                          key={column.name}
+                          value={column.name}
+                          className="capitalize"
+                          onClick={() => {
+                            setColumnIndex(index)
+                          }}
+                        >
+                          {column.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -162,17 +193,24 @@ export function AddTaskModal() {
                 className="flex items-center w-full gap-4"
                 onClick={() => {
                   append({
-                    status: "pending",
+                    completed: false,
                     task: "",
                   })
                 }}
+                type="button"
               >
                 <PlusIcon /> Add New Subtask
               </Button>
             </div>
 
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              {Object.keys(errors).length !== 0 ? (
+                <DialogClose asChild>
+                  <Button type="submit">Save changes</Button>
+                </DialogClose>
+              ) : (
+                <Button type="submit">Save changes</Button>
+              )}
             </DialogFooter>
           </form>
         </ScrollArea>

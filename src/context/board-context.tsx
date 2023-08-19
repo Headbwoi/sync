@@ -15,7 +15,7 @@ type BoardType = {
           name: string
           description: string
           subtasks: {
-            name: string
+            task: string
             completed: boolean
           }[]
         }[]
@@ -49,9 +49,9 @@ export const BoardContextProvider = ({
   const [currentBoard, setCurrentBoard] = useState({} as BoardType)
   const [openCreateNewBoard, setOpenCreateNewBoard] = React.useState(false)
 
-  useEffect(() => {
-    console.log(currentBoard)
-  }, [currentBoard])
+  // useEffect(() => {
+  //   console.log(currentBoard)
+  // }, [currentBoard])
 
   return (
     <BoardContext.Provider
