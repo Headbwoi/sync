@@ -71,11 +71,15 @@ export default function Sidebar() {
 
         <section className="p-5 space-y-5">
           <div
-            className={`flex items-center justify-center gap-6 p-5 rounded-sm bg-background ${
-              !expanded && "overflow-hidden w-0 invisible"
+            className={`flex items-center justify-center gap-6 p-5 rounded-sm bg-muted-foreground ${
+              !expanded && "px-0.5 py-1 gap-0  "
             }`}
           >
-            <SunIcon className="text-foreground" />
+            <SunIcon
+              className={`text-foreground ${
+                !expanded && "overflow-hidden w-0 invisible"
+              }`}
+            />
             <Switch
               id="theme"
               checked={theme === "dark"}
@@ -84,7 +88,11 @@ export default function Sidebar() {
               }}
               aria-label="toggle theme"
             />
-            <MoonStar className="text-foreground" />
+            <MoonStar
+              className={`text-foreground ${
+                !expanded && "overflow-hidden w-0 invisible"
+              }`}
+            />
           </div>
 
           <div

@@ -55,6 +55,13 @@ interface StoreState {
         }[]
       | undefined
   }) => void
+
+  deleteColumn: (data: { boardId: string; columnName: string }) => void
+  editColumn: (data: {
+    boardId: string
+    columnName: string
+    columnIndex: number
+  }) => void
 }
 
 export const useBoardStore = create<StoreState>()(
@@ -78,6 +85,50 @@ export const useBoardStore = create<StoreState>()(
           ),
         })),
 
+      // delete the column
+
+      deleteColumn: (data) =>
+        set((state) => {
+          const updatedBoards = state.boards.map((board) => {
+            if (board.id === data.boardId) {
+              const columns = [...board.columns]
+
+              const newColumns = columns.filter(
+                (column) => column.name !== data.columnName
+              )
+
+              return {
+                ...board,
+                columns: newColumns,
+              }
+            }
+            return board
+          })
+
+          return {
+            boards: updatedBoards,
+          }
+        }),
+      editColumn: (data) =>
+        set((state) => {
+          const updatedBoards = state.boards.map((board) => {
+            if (board.id === data.boardId) {
+              const columns = [...board.columns]
+
+              columns[data.columnIndex].name = data.columnName
+
+              return {
+                ...board,
+                columns,
+              }
+            }
+            return board
+          })
+
+          return {
+            boards: updatedBoards,
+          }
+        }),
       // add tasks to the column in the board
       addTaskToColumn: (data) =>
         set((state) => {

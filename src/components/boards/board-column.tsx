@@ -5,6 +5,7 @@ import { useWindowSize } from "@/hooks/useWindowSize"
 import { AddColumn } from "./add-new-column"
 import TaskInfo, { TaskProps } from "../tasks/task-info"
 import { useBoardContext } from "@/context/board-context"
+import ColumnHeader from "./column-header"
 
 function BoardColumn() {
   const { width } = useWindowSize()
@@ -23,12 +24,18 @@ function BoardColumn() {
         <section key={currentBoard?.boardName} className="flex gap-10">
           {/* columns */}
 
-          {currentBoard?.columns?.map((column) => (
+          {currentBoard?.columns?.map((column, index) => (
             <section
-              className="flex flex-col min-w-[17.8125rem] gap-10"
+              className="flex flex-col min-w-[17.8125rem] gap-10 "
               key={column.name}
             >
-              <p className="font-bold capitalize ">{column?.name}</p>
+              <ColumnHeader
+                info={{
+                  columnName: column.name,
+                  columnIndex: index,
+                  boardId: currentBoard.id,
+                }}
+              />
 
               {column.tasks?.map((task) => (
                 <React.Fragment key={task.id}>
