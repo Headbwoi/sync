@@ -18,7 +18,7 @@ export type TaskProps = {
     completed: boolean
   }[]
   id: string
-  status: string
+  column: string
 }
 
 function TaskInfo({
@@ -31,9 +31,8 @@ function TaskInfo({
   setShowModal: (open: boolean) => void
 }) {
   const { currentBoard } = useBoardContext()
-  const [status, setStatus] = useState(task.status)
 
-  const completedSubTasks = task.subtasks.reduce((count, task) => {
+  const completedSubTasks = task.subtasks?.reduce((count, task) => {
     if (task.completed) {
       return count + 1
     }
@@ -45,18 +44,18 @@ function TaskInfo({
   // }, [status])
 
   return (
-    <Modal open={showModal} onOpenChange={setShowModal}>
+    <Modal open={showModal} onOpenChange={(prev) => !prev}>
       <Modal.Content title={task.name} className="space-y-6 bg-foreground">
         <p className="text-muted">{task.description}</p>
 
         {/* subtasks */}
         <div className="space-y-3">
           <header className="font-semibold text-card">
-            subtasks ({completedSubTasks} of {task.subtasks.length})
+            subtasks ({completedSubTasks} of {task.subtasks?.length})
           </header>
 
           <div className="flex flex-col gap-3">
-            {task.subtasks.map((task, index) => (
+            {task.subtasks?.map((task, index) => (
               <div className="flex items-center space-x-2" key={task.task}>
                 <div className="flex items-center rounded-sm ring-blue-500 ring-2">
                   <Checkbox id={`${index}`} />
@@ -82,12 +81,12 @@ function TaskInfo({
           </label>
 
           <Select
-            onValueChange={(value) => setStatus(value)}
-            defaultValue={task.status}
+            // onValueChange={(value) => setStatus(value)}
+            defaultValue={task.column}
           >
             <SelectTrigger>
               <SelectValue
-                placeholder={task.status}
+                placeholder={task.column}
                 className="text-red-500 placeholder:text-red-500"
               />
             </SelectTrigger>

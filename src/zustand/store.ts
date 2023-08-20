@@ -11,7 +11,6 @@ interface StoreState {
           name: string
           tasks: {
             id: string
-            status: string
             name: string
             description: string
             subtasks: {
@@ -38,6 +37,15 @@ interface StoreState {
     columns: []
   }) => void
 
+  deleteColumn: (data: { boardId: string; columnName: string }) => void
+  editColumn: (data: {
+    boardId: string
+    columnName: string
+    columnIndex: number
+  }) => void
+
+  // tasks
+
   addTaskToColumn: (data: {
     id: string
     boardId: string
@@ -56,11 +64,18 @@ interface StoreState {
       | undefined
   }) => void
 
-  deleteColumn: (data: { boardId: string; columnName: string }) => void
-  editColumn: (data: {
+  editTask: (data: {
     boardId: string
     columnName: string
-    columnIndex: number
+    taskInfo: {
+      id: string
+      name: string
+      description: string
+      subtasks: {
+        task: string
+        completed: boolean
+      }[]
+    }
   }) => void
 }
 
@@ -109,6 +124,8 @@ export const useBoardStore = create<StoreState>()(
             boards: updatedBoards,
           }
         }),
+
+      // edits a column
       editColumn: (data) =>
         set((state) => {
           const updatedBoards = state.boards.map((board) => {
@@ -129,6 +146,7 @@ export const useBoardStore = create<StoreState>()(
             boards: updatedBoards,
           }
         }),
+
       // add tasks to the column in the board
       addTaskToColumn: (data) =>
         set((state) => {
@@ -145,7 +163,6 @@ export const useBoardStore = create<StoreState>()(
                 description: data.description,
                 name: data.title,
                 subtasks: data.subtasks ? data.subtasks : [],
-                status: data.status,
               })
               return { ...board, columns: updatedColumns }
             }
@@ -153,6 +170,39 @@ export const useBoardStore = create<StoreState>()(
           })
 
           return { boards: updatedBoards }
+        }),
+
+      // edit a task
+
+      editTask: (data) =>
+        set((state) => {
+          const updatedBoards = state.boards.map((board) => {
+            if (board.id === data.boardId) {
+              const columns = [...board.columns]
+
+              const [selectedColumn] = columns.filter(
+                (column) => column.name === data.columnName
+              )
+
+              selectedColumn.tasks.map((task) => {
+                if (task.id === data.taskInfo.id) {
+                  task = data.taskInfo
+                  return task
+                }
+                return task
+              })
+
+              return {
+                ...board,
+                columns,
+              }
+            }
+            return board
+          })
+
+          return {
+            boards: updatedBoards,
+          }
         }),
     }),
     {

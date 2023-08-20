@@ -38,9 +38,11 @@ function ModalContent({
         )}
       >
         <div className="flex items-center justify-between">
-          <Dialog.Title className="text-xl font-semibold text-background">
-            {title}
-          </Dialog.Title>
+          {title !== "" && (
+            <Dialog.Title className="text-xl font-semibold text-background">
+              {title}
+            </Dialog.Title>
+          )}
           <Dialog.Close className="text-gray-400 hover:text-gray-500">
             <X />
           </Dialog.Close>
