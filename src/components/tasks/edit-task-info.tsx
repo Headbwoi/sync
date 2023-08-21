@@ -67,7 +67,7 @@ function EditTaskInfo({
 
   return (
     <Modal open={showEditModal} onOpenChange={setShowEditModal}>
-      <Modal.Content title={`Edit Task`} className="px-2">
+      <Modal.Content title={`Edit Task`}>
         <ScrollArea className="max-h-[50vh] py-10">
           <form
             onSubmit={handleSubmit(OnSubmit)}

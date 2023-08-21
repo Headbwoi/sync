@@ -26,7 +26,7 @@ function ModalContent({
 }: {
   title: string
   children: ReactNode
-  className: string
+  className?: string
 }) {
   return (
     <Dialog.Portal>
@@ -39,7 +39,7 @@ function ModalContent({
       >
         <div className="flex items-center justify-between">
           {title !== "" && (
-            <Dialog.Title className="text-xl font-semibold text-background">
+            <Dialog.Title className="text-xl font-semibold text-background capitalize">
               {title}
             </Dialog.Title>
           )}

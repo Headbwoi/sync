@@ -1,4 +1,3 @@
-import React, { useState } from "react"
 import Modal from "../ui/modal"
 import { Checkbox } from "../ui/checkbox"
 import {
@@ -21,15 +20,7 @@ export type TaskProps = {
   column: string
 }
 
-function TaskInfo({
-  task,
-  showModal,
-  setShowModal,
-}: {
-  task: TaskProps
-  showModal: boolean
-  setShowModal: (open: boolean) => void
-}) {
+function TaskInfo({ task }: { task: TaskProps }) {
   const { currentBoard } = useBoardContext()
 
   const completedSubTasks = task.subtasks?.reduce((count, task) => {
@@ -39,12 +30,13 @@ function TaskInfo({
     return count
   }, 0)
 
-  // useEffect(() => {
-  //   console.log(status)
-  // }, [status])
-
   return (
-    <Modal open={showModal} onOpenChange={(prev) => !prev}>
+    <Modal>
+      <Modal.Button asChild className="w-full h-full">
+        <header className="text-lg font-semibold capitalize text-background">
+          {task.name}
+        </header>
+      </Modal.Button>
       <Modal.Content title={task.name} className="space-y-6 bg-foreground">
         <p className="text-muted">{task.description}</p>
 
@@ -80,28 +72,9 @@ function TaskInfo({
             Status
           </label>
 
-          <Select
-            // onValueChange={(value) => setStatus(value)}
-            defaultValue={task.column}
-          >
-            <SelectTrigger>
-              <SelectValue
-                placeholder={task.column}
-                className="text-red-500 placeholder:text-red-500"
-              />
-            </SelectTrigger>
-            <SelectContent className="">
-              {currentBoard?.columns.map((column) => (
-                <SelectItem
-                  key={column.name}
-                  value={column.name}
-                  className="cursor-pointer"
-                >
-                  {column.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="text-foreground p-2 w-full rounded-md bg-background">
+            {task.column}
+          </div>
         </div>
       </Modal.Content>
     </Modal>
