@@ -1,6 +1,6 @@
 "use client"
 import { useBoardStore } from "@/zustand/store"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
 type BoardType = {
   id: string
@@ -14,10 +14,12 @@ type BoardType = {
           id: string
           name: string
           description: string
-          subtasks: {
-            task: string
-            completed: boolean
-          }[]
+          subtasks:
+            | {
+                task: string
+                completed: boolean
+              }[]
+            | undefined
         }[]
       }[]
 }
