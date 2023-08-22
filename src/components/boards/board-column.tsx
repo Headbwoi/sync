@@ -6,12 +6,13 @@ import { AddColumn } from "./add-new-column"
 import TaskInfo, { TaskProps } from "../tasks/task-info"
 import { useBoardContext } from "@/context/board-context"
 import ColumnHeader from "./column-header"
-import { MoreVertical } from "lucide-react"
 import EditTaskInfo from "../tasks/edit-task-info"
 
 function BoardColumn() {
   const { width } = useWindowSize()
   const { currentBoard } = useBoardContext()
+  const [openTaskModal, setOpenTaskModal] = useState(false)
+  const [currentTask, setCurrentTask] = useState({} as TaskProps)
 
   return (
     <>
@@ -39,8 +40,16 @@ function BoardColumn() {
 
               {column.tasks?.map((task) => (
                 <React.Fragment key={task.id}>
-                  <div className="w-[17.8125rem] rounded-lg p-5 bg-muted-foreground cursor-pointer flex items-center justify-between">
-                    <TaskInfo task={{ ...task, column: column.name }} />
+                  <div
+                    className="w-[17.8125rem] rounded-lg p-5 bg-muted-foreground cursor-pointer flex items-center justify-between"
+                    onClick={() => {
+                      setOpenTaskModal(true)
+                      setCurrentTask({ ...task, column: column.name })
+                    }}
+                  >
+                    <header className="text-lg font-semibold capitalize text-background">
+                      {task.name}
+                    </header>
                   </div>
                 </React.Fragment>
               ))}
@@ -50,6 +59,14 @@ function BoardColumn() {
           <AddColumn />
         </section>
       </div>
+
+      {openTaskModal && (
+        <TaskInfo
+          task={currentTask}
+          openTaskModal={openTaskModal}
+          setOpenTaskModal={setOpenTaskModal}
+        />
+      )}
     </>
   )
 }
