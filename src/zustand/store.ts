@@ -13,10 +13,12 @@ interface StoreState {
             id: string
             name: string
             description: string
-            subtasks: {
-              task: string
-              completed: boolean
-            }[]
+            subtasks:
+              | {
+                  task: string
+                  completed: boolean
+                }[]
+              | undefined
           }[]
         }[]
       | []
@@ -71,10 +73,12 @@ interface StoreState {
       id: string
       name: string
       description: string
-      subtasks: {
-        task: string
-        completed: boolean
-      }[]
+      subtasks:
+        | {
+            task: string
+            completed: boolean
+          }[]
+        | undefined
     }
   }) => void
 }
@@ -173,36 +177,47 @@ export const useBoardStore = create<StoreState>()(
         }),
 
       // edit a task
-
       editTask: (data) =>
         set((state) => {
-          const updatedBoards = state.boards.map((board) => {
-            if (board.id === data.boardId) {
-              const columns = [...board.columns]
+          const boardIndex = state.boards.findIndex(
+            (board) => board.id === data.boardId
+          )
 
-              const [selectedColumn] = columns.filter(
-                (column) => column.name === data.columnName
-              )
-
-              selectedColumn.tasks.map((task) => {
-                if (task.id === data.taskInfo.id) {
-                  task = data.taskInfo
-                  return task
-                }
-                return task
-              })
-
-              return {
-                ...board,
-                columns,
-              }
-            }
-            return board
-          })
-
-          return {
-            boards: updatedBoards,
+          if (boardIndex === -1) {
+            return state // If board is not found, return the current state
           }
+
+          // Find the column by name
+          const column = state.boards[boardIndex].columns.find(
+            (col) => col.name === data.columnName
+          )
+
+          if (!column) {
+            return state // If column is not found, return the current state
+          }
+
+          // Find the task by id
+          const taskIndex = column.tasks.findIndex(
+            (task) => task.id === data.taskInfo.id
+          )
+
+          if (taskIndex === -1) {
+            return state // If task is not found, return the current state
+          }
+
+          // Update the specific task with the provided data
+          column.tasks[taskIndex] = {
+            ...column.tasks[taskIndex],
+            ...data.taskInfo,
+          }
+
+          // Create a new state object with the updated task
+          const newState = {
+            ...state,
+            boards: [...state.boards],
+          }
+
+          return newState
         }),
     }),
     {

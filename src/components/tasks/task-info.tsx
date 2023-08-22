@@ -13,6 +13,7 @@ import { Input } from "../ui/input"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { AddTaskSchema, AddTaskType } from "@/lib/validations/form-validations"
 import { PlusIcon, X } from "lucide-react"
+import { useBoardStore } from "@/zustand/store"
 
 export type TaskProps = {
   name: string
@@ -35,6 +36,7 @@ function TaskInfo({
   openTaskModal: boolean
 }) {
   const { currentBoard } = useBoardContext()
+  const { editTask } = useBoardStore((state) => state)
 
   const {
     handleSubmit,
@@ -78,6 +80,9 @@ function TaskInfo({
     }
 
     console.log(payload)
+
+    editTask(payload)
+    // setOpenTaskModal(false)
   }
 
   return (
