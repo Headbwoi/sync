@@ -49,7 +49,9 @@ const Clear = ({
   return (
     <Dialog open={show} onOpenChange={setShow}>
       <DialogTrigger asChild>
-        <Trash className="text-red-500 mx-auto mb-10 cursor-pointer" />
+        <Button variant={"link"} className="text-red-500">
+          <Trash className="mx-auto mb-10 text-red-500" />
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
