@@ -59,7 +59,7 @@ export function CreateNewBoard({
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          aria-label="Create New Board"
+          aria-label="Create A New Board"
           onClick={() => {
             !matches && setExpanded(false)
           }}
