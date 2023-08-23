@@ -49,8 +49,13 @@ const Clear = ({
   return (
     <Dialog open={show} onOpenChange={setShow}>
       <DialogTrigger asChild>
-        <Button variant={"link"} className="text-red-500">
+        <Button
+          variant={"link"}
+          className="text-red-500"
+          aria-label="Clear Your Data"
+        >
           <Trash className="mx-auto mb-10 text-red-500" />
+          <span className="sr-only">Clear Your Data</span>
         </Button>
       </DialogTrigger>
 
