@@ -81,6 +81,7 @@ interface StoreState {
         | undefined
     }
   }) => void
+  reset: () => void
 }
 
 export const useBoardStore = create<StoreState>()(
@@ -93,6 +94,8 @@ export const useBoardStore = create<StoreState>()(
         set((state) => ({
           boards: [...state.boards, data],
         })),
+
+      // deletes a board
 
       // adds a column to the board
       addColumnToBoard: (data) =>
@@ -219,6 +222,12 @@ export const useBoardStore = create<StoreState>()(
 
           return newState
         }),
+
+      // clears all
+      reset: () =>
+        set(() => ({
+          boards: [],
+        })),
     }),
     {
       name: "my_sync_board",

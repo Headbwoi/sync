@@ -6,6 +6,7 @@ import {
   EyeOff,
   SunIcon,
   MoonStar,
+  Trash,
 } from "lucide-react"
 import { useState } from "react"
 import { Icons } from "../icons"
@@ -15,6 +16,9 @@ import { useWindowSize } from "@/hooks/useWindowSize"
 import { Switch } from "../ui/switch"
 import { CreateNewBoard } from "../boards/create-new-board"
 import { useRouter } from "next/navigation"
+import Modal from "../ui/modal"
+import { Button } from "../ui/button"
+import ClearData from "../boards/clear-data"
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState(false)
@@ -97,6 +101,8 @@ export default function Sidebar() {
             <p className="">Hide Sidebar</p>
           </div>
         </section>
+
+        <ClearData />
       </nav>
     </aside>
   )

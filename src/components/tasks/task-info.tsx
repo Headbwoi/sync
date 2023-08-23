@@ -68,7 +68,7 @@ function TaskInfo({
   }, 0)
 
   const onSubmit = (data: AddTaskType) => {
-    console.log(data)
+    // console.log(data)
 
     const payload = {
       boardId: currentBoard.id,
@@ -81,10 +81,10 @@ function TaskInfo({
       },
     }
 
-    console.log(payload)
+    // console.log(payload)
 
     editTask(payload)
-    // setOpenTaskModal(false)
+    setOpenTaskModal(false)
   }
 
   return (
