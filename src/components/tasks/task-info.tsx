@@ -11,17 +11,19 @@ import { useBoardContext } from "@/context/board-context"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
-import { AddTaskSchema, AddTaskType } from "@/lib/validations/form-validations"
-import { PlusIcon, X } from "lucide-react"
+import { AddTaskType } from "@/lib/validations/form-validations"
+import { X } from "lucide-react"
 import { useBoardStore } from "@/zustand/store"
 
 export type TaskProps = {
   name: string
   description: string
-  subtasks: {
-    task: string
-    completed: boolean
-  }[]
+  subtasks:
+    | {
+        task: string
+        completed: boolean
+      }[]
+    | undefined
   id: string
   column: string
 }

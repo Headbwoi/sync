@@ -6,7 +6,6 @@ import { AddColumn } from "./add-new-column"
 import TaskInfo, { TaskProps } from "../tasks/task-info"
 import { useBoardContext } from "@/context/board-context"
 import ColumnHeader from "./column-header"
-import EditTaskInfo from "../tasks/edit-task-info"
 
 function BoardColumn() {
   const { width } = useWindowSize()
@@ -44,7 +43,7 @@ function BoardColumn() {
                     className="w-[17.8125rem] rounded-lg p-5 bg-muted-foreground cursor-pointer flex items-center justify-between"
                     onClick={() => {
                       setOpenTaskModal(true)
-                      setCurrentTask({ ...task, column: column.name })
+                      setCurrentTask({ ...task, column: column?.name })
                     }}
                   >
                     <header className="text-lg font-semibold capitalize text-background">
