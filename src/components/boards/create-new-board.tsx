@@ -108,7 +108,7 @@ export function CreateNewBoard({
             <Textarea
               id="description"
               className="col-span-3"
-              placeholder="e.g. it is always good to take a break and touch grass"
+              placeholder="e.g. touch some grass"
               {...register("description")}
             />
           </div>
